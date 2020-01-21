@@ -1,0 +1,47 @@
+# ClusterConfig object for cloud-infrastructure openldap cluster information:
+# Make sure to tag subnets possibly in ansible before this
+--- 
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: cloudinfra-openldap
+  region: us-east-1
+
+vpc:
+  id: "vpc-be39dfda"  # green
+  cidr: "10.224.128.0/17" 
+  subnets:
+    public:
+      us-east-1c-publicExtra:
+        id: "subnet-0c29cf3d9360f66b6"
+        cidr: "10.224.168.0/21"
+      us-east-1e-publicExtra:
+        id: "subnet-037dd0723fc9c6196"
+        cidr: "10.224.230.0/23"
+      us-east-1d-public:
+        id: "subnet-3fcc0863"
+        cidr: "10.224.192.0/22"
+
+nodeGroups:
+  - name: worker
+    instanceType: m5.large
+    minSize: 3
+    maxSize: 4
+    maxPodsPerNode: 1
+    desiredCapacity: 4
+    volumeSize: 100
+    ssh:
+      allow: true
+      publicKeyPath: 'cwarner.pub'
+    labels: {role: minion}
+    tags:
+      nodegroup-role: minion
+    iam:
+      withAddonPolicies:
+        externalDNS: true
+    
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api", "audit", "authenticator", "scheduler"]
+

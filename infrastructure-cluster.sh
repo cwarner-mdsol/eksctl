@@ -1,0 +1,12 @@
+eksctl create cluster \
+--name cloudinfra-openldap \
+--version 1.14 \
+--region us-east-1 \
+--nodegroup-name cloudinfra-minions \
+--node-type m5.large \
+--nodes 7 \
+--nodes-min 3 \
+--nodes-max 7 \
+--ssh-access \
+--ssh-public-key cwarner.pub \
+--managed
